@@ -9,8 +9,25 @@ import {
   votingOpen,
 } from "@/lib/config";
 import { getCurrentUser } from "@/lib/session";
+import { sql } from "@/lib/db";
+import TeacherMarquee from "@/components/TeacherMarquee";
 
 export const dynamic = "force-dynamic";
+
+/** Lenta uchun ustozlar. Baza javob bermasa sahifa baribir ochilaveradi. */
+async function marqueeTeachers() {
+  try {
+    return (await sql`
+      SELECT id, full_name, photo_url
+      FROM teachers
+      WHERE is_active AND photo_url IS NOT NULL
+      ORDER BY random()
+      LIMIT 24
+    `) as { id: number; full_name: string; photo_url: string | null }[];
+  } catch {
+    return [];
+  }
+}
 
 export default async function Home({
   searchParams,
@@ -18,7 +35,10 @@ export default async function Home({
   searchParams: Promise<{ e?: string }>;
 }) {
   const { e } = await searchParams;
-  const user = await getCurrentUser();
+  const [user, teachers] = await Promise.all([
+    getCurrentUser(),
+    marqueeTeachers(),
+  ]);
   const open = votingOpen();
 
   const errorText =
@@ -56,6 +76,7 @@ export default async function Home({
 
       {/* ---------- Hero ---------- */}
       <section className="card-brand animate-in mt-6 px-6 py-10 text-center sm:px-10 sm:py-14">
+        <div className="hero-photo" />
         <div className="relative">
           <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.22em] text-white/75">
             1-oktyabr · Ustozlar va murabbiylar kuni
@@ -115,6 +136,9 @@ export default async function Home({
           </div>
         </div>
       </section>
+
+      {/* ---------- Ustozlar lentasi ---------- */}
+      <TeacherMarquee items={teachers} />
 
       {/* ---------- Qanday ishlaydi ---------- */}
       <section className="mt-12">

@@ -138,6 +138,23 @@ body::after {
   pointer-events: none;
 }
 
+/* Hero ichidagi jamoaviy surat — brend gradienti ostida tekstura sifatida */
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      150deg,
+      rgba(239, 81, 35, 0.84) 0%,
+      rgba(214, 61, 18, 0.89) 48%,
+      rgba(132, 32, 5, 0.94) 100%
+    ),
+    url("/hero-photo.jpg");
+  background-size: cover;
+  background-position: center 38%;
+  pointer-events: none;
+}
+
 /* ---------- Tugmalar ---------- */
 
 .btn {
@@ -315,6 +332,20 @@ body::after {
   animation: pulse-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -341,7 +372,8 @@ body::after {
   .animate-in,
   .spin-slow,
   .pulse-ring,
-  .shimmer {
+  .shimmer,
+  .marquee-track {
     animation: none;
   }
 }
