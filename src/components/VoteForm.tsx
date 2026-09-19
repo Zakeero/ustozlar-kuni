@@ -33,12 +33,12 @@ export default function VoteForm({
 
   if (alreadyVoted) {
     return (
-      <div className="card rounded-2xl p-6 text-center">
-        <p className="text-3xl">✅</p>
-        <p className="mt-2 font-semibold text-white">
+      <div className="card p-7 text-center">
+        <p className="text-4xl">✅</p>
+        <p className="font-display mt-3 text-lg text-[color:var(--ember)]">
           Siz bu ustozga allaqachon ovoz bergansiz
         </p>
-        <p className="mt-1 text-sm text-white/50">
+        <p className="muted mt-1.5 text-sm">
           Qolgan ovozlaringizni boshqa ustozlarga bering.
         </p>
       </div>
@@ -47,27 +47,29 @@ export default function VoteForm({
 
   if (done) {
     return (
-      <div className="card animate-in rounded-2xl p-6 text-center">
-        <p className="text-4xl">🎉</p>
-        <p className="mt-3 text-lg font-semibold text-white">
-          Ovozingiz qabul qilindi!
-        </p>
-        <p className="mt-1 text-sm text-white/55">
-          {teacherName} uchun rahmat aytdingiz.
-        </p>
-        <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <button
-            onClick={() => router.push("/men")}
-            className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black"
-          >
-            Do'stlarni taklif qilish
-          </button>
-          <button
-            onClick={() => router.push("/filiallar")}
-            className="rounded-xl border border-white/12 px-5 py-2.5 text-sm text-white/80"
-          >
-            Yana ovoz berish
-          </button>
+      <div className="card-brand animate-in p-8 text-center">
+        <div className="relative">
+          <p className="text-5xl">🎉</p>
+          <p className="font-display mt-4 text-2xl text-white">
+            Ovozingiz qabul qilindi!
+          </p>
+          <p className="mt-2 text-sm text-white/80">
+            {teacherName} uchun rahmat aytdingiz.
+          </p>
+          <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:justify-center">
+            <button
+              onClick={() => router.push("/men")}
+              className="btn btn-light"
+            >
+              Do'stlarni taklif qilish
+            </button>
+            <button
+              onClick={() => router.push("/filiallar")}
+              className="btn !bg-white/12 !text-white ring-1 ring-white/25 hover:!bg-white/20"
+            >
+              Yana ovoz berish
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -75,15 +77,17 @@ export default function VoteForm({
 
   if (votesLeft <= 0) {
     return (
-      <div className="card rounded-2xl p-6 text-center">
-        <p className="text-3xl">🔒</p>
-        <p className="mt-2 font-semibold text-white">Ovozlaringiz tugadi</p>
-        <p className="mt-1 text-sm text-white/50">
+      <div className="card p-7 text-center">
+        <p className="text-4xl">🔒</p>
+        <p className="font-display mt-3 text-lg text-[color:var(--ember)]">
+          Ovozlaringiz tugadi
+        </p>
+        <p className="muted mt-1.5 text-sm">
           Do'stingizni taklif qiling — har biri uchun +1 ovoz olasiz.
         </p>
         <button
           onClick={() => router.push("/men")}
-          className="mt-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black"
+          className="btn btn-primary mt-5"
         >
           Taklif havolamni olish
         </button>
@@ -126,12 +130,10 @@ export default function VoteForm({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white/50">
-          Qaysi nominatsiyaga ovoz berasiz?
-        </h2>
-        <div className="grid gap-2">
+        <h2 className="eyebrow mb-3">Qaysi nominatsiyaga ovoz berasiz?</h2>
+        <div className="grid gap-2.5">
           {NOMINATIONS.map((n) => {
             const active = nomination === n.key;
             return (
@@ -139,26 +141,45 @@ export default function VoteForm({
                 key={n.key}
                 type="button"
                 onClick={() => setNomination(n.key)}
-                className={`flex items-center gap-3 rounded-2xl border p-3.5 text-left transition ${
-                  active
-                    ? "border-amber-400/50 bg-amber-400/10"
-                    : "border-white/8 bg-white/4 hover:bg-white/6"
-                }`}
+                className="flex items-center gap-3.5 rounded-2xl border p-3.5 text-left transition"
+                style={{
+                  borderColor: active ? n.tint : "var(--line)",
+                  background: active
+                    ? `color-mix(in srgb, ${n.tint} 8%, white)`
+                    : "rgba(255,255,255,.7)",
+                  boxShadow: active
+                    ? `0 10px 26px -14px ${n.tint}`
+                    : "0 1px 2px rgba(122,31,8,.04)",
+                }}
               >
                 <span
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${n.accent} text-xl`}
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[1.35rem]"
+                  style={{ background: n.accent }}
                 >
                   {n.emoji}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold text-white">{n.title}</span>
-                  <span className="block text-xs text-white/45">{n.description}</span>
+                  <span
+                    className="block font-bold leading-tight"
+                    style={{ color: n.tint }}
+                  >
+                    {n.title}
+                  </span>
+                  <span className="muted mt-0.5 block text-[0.78rem] leading-snug">
+                    {n.description}
+                  </span>
                 </span>
                 <span
-                  className={`h-5 w-5 shrink-0 rounded-full border-2 transition ${
-                    active ? "border-amber-400 bg-amber-400" : "border-white/20"
-                  }`}
-                />
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition"
+                  style={{
+                    borderColor: active ? n.tint : "rgba(122,31,8,.18)",
+                    background: active ? n.tint : "transparent",
+                  }}
+                >
+                  {active && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                  )}
+                </span>
               </button>
             );
           })}
@@ -167,55 +188,62 @@ export default function VoteForm({
 
       {askStudent && (
         <div>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-white/50">
-            Siz kimsiz?
-          </h2>
-          <div className="grid grid-cols-2 gap-2">
+          <h2 className="eyebrow mb-2.5">Siz kimsiz?</h2>
+          <div className="grid grid-cols-2 gap-2.5">
             {[
               { v: true, label: "O'quvchiman", icon: "🎓" },
               { v: false, label: "Mehmonman", icon: "👋" },
-            ].map((o) => (
-              <button
-                key={String(o.v)}
-                type="button"
-                onClick={() => setIsStudent(o.v)}
-                className={`rounded-xl border p-3 text-sm transition ${
-                  isStudent === o.v
-                    ? "border-amber-400/50 bg-amber-400/10 text-white"
-                    : "border-white/8 bg-white/4 text-white/70"
-                }`}
-              >
-                <span className="mr-1.5">{o.icon}</span>
-                {o.label}
-              </button>
-            ))}
+            ].map((o) => {
+              const active = isStudent === o.v;
+              return (
+                <button
+                  key={String(o.v)}
+                  type="button"
+                  onClick={() => setIsStudent(o.v)}
+                  className={`rounded-2xl border p-3.5 text-sm font-bold transition ${
+                    active
+                      ? "border-[color:var(--brand)] bg-[color:var(--sand)] text-[color:var(--brand-700)]"
+                      : "border-[color:var(--line)] bg-white/70 text-[color:var(--muted)]"
+                  }`}
+                >
+                  <span className="mr-1.5">{o.icon}</span>
+                  {o.label}
+                </button>
+              );
+            })}
           </div>
-          <p className="mt-1.5 text-xs text-white/35">
+          <p className="muted mt-2 text-xs">
             O'quvchilar va mehmonlar ovozi alohida hisoblanadi.
           </p>
         </div>
       )}
 
       <div>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-white/50">
+        <h2 className="eyebrow mb-2.5">
           Ustozingizga iliq so'z{" "}
-          <span className="font-normal normal-case text-white/30">(ixtiyoriy)</span>
+          <span className="font-semibold normal-case tracking-normal text-[color:var(--muted)]">
+            (ixtiyoriy)
+          </span>
         </h2>
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value.slice(0, 500))}
           rows={3}
           placeholder="Ustozim menga nimani o'rgatdi…"
-          className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none transition focus:border-amber-400/40"
+          className="input resize-none"
         />
-        <p className="mt-1 text-right text-xs text-white/30">{comment.length}/500</p>
-        <p className="text-xs text-white/40">
-          Barcha iliq so'zlar 1-oktyabrda ustozlarga albom qilib topshiriladi.
-        </p>
+        <div className="mt-1.5 flex items-start justify-between gap-3">
+          <p className="muted text-xs">
+            Barcha iliq so'zlar 1-oktyabrda ustozlarga albom qilib topshiriladi.
+          </p>
+          <span className="muted shrink-0 text-xs tabular-nums">
+            {comment.length}/500
+          </span>
+        </div>
       </div>
 
       {error && (
-        <p className="rounded-xl border border-rose-400/25 bg-rose-400/10 px-4 py-2.5 text-sm text-rose-100">
+        <p className="rounded-2xl border border-[color:var(--brand-300)] bg-[color:var(--sand)] px-4 py-3 text-sm font-medium text-[color:var(--brand-700)]">
           {error}
         </p>
       )}
@@ -223,9 +251,9 @@ export default function VoteForm({
       <button
         onClick={submit}
         disabled={loading}
-        className="w-full rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3.5 text-sm font-bold text-black transition hover:brightness-110 disabled:opacity-50"
+        className="btn btn-primary w-full !py-4 !text-base"
       >
-        {loading ? "Yuborilmoqda…" : `Ovoz berish (${votesLeft} ta qoldi)`}
+        {loading ? "Yuborilmoqda…" : `Ovoz berish · ${votesLeft} ta qoldi`}
       </button>
     </div>
   );

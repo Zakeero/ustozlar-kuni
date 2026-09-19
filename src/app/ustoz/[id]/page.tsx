@@ -37,20 +37,31 @@ export default async function TeacherPage({
     <main>
       <BackLink href={`/filial/${branch?.slug ?? ""}`} label={branch?.name ?? "Orqaga"} />
 
-      <section className="card animate-in mt-4 rounded-3xl p-6 text-center">
-        <div className="mx-auto w-fit">
-          <Avatar name={teacher.full_name} src={teacher.photo_url} size={96} />
+      <section className="card animate-in relative mt-4 overflow-hidden p-6 text-center">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-24"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(239,81,35,.10), transparent)",
+          }}
+        />
+        <div className="relative mx-auto w-fit">
+          <Avatar name={teacher.full_name} src={teacher.photo_url} size={100} />
         </div>
-        <h1 className="mt-4 text-2xl font-bold text-white">{teacher.full_name}</h1>
+        <h1 className="font-display relative mt-4 text-2xl text-[color:var(--ember)]">
+          {teacher.full_name}
+        </h1>
         {teacher.subject && (
-          <p className="mt-1 text-sm text-amber-200/80">{teacher.subject}</p>
+          <p className="relative mt-1.5 text-sm font-bold text-[color:var(--brand)]">
+            {teacher.subject}
+          </p>
         )}
         {teacher.bio && (
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/55">
+          <p className="muted relative mx-auto mt-3 max-w-md text-sm leading-relaxed">
             {teacher.bio}
           </p>
         )}
-        <p className="mt-3 text-xs text-white/35">{branch?.name}</p>
+        <p className="muted relative mt-3 text-xs">{branch?.name}</p>
       </section>
 
       <section className="mt-6">

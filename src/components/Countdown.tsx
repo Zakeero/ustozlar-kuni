@@ -12,7 +12,14 @@ function parts(ms: number) {
   };
 }
 
-export default function Countdown({ endsAt }: { endsAt: string }) {
+export default function Countdown({
+  endsAt,
+  onBrand = false,
+}: {
+  endsAt: string;
+  /** To'q brend fonida turganda oq uslub */
+  onBrand?: boolean;
+}) {
   const target = new Date(endsAt).getTime();
   const [left, setLeft] = useState<number | null>(null);
 
@@ -23,13 +30,15 @@ export default function Countdown({ endsAt }: { endsAt: string }) {
     return () => clearInterval(id);
   }, [target]);
 
-  if (left === null) {
-    return <div className="h-[72px]" aria-hidden />;
-  }
+  if (left === null) return <div className="h-[74px]" aria-hidden />;
 
   if (left <= 0) {
     return (
-      <p className="text-sm font-medium text-amber-200">
+      <p
+        className={
+          onBrand ? "font-semibold text-white" : "font-semibold text-[color:var(--brand-700)]"
+        }
+      >
         Ovoz berish yakunlandi
       </p>
     );
@@ -43,18 +52,25 @@ export default function Countdown({ endsAt }: { endsAt: string }) {
     [s, "soniya"],
   ];
 
+  const cell = onBrand
+    ? "bg-white/14 ring-1 ring-white/25 text-white"
+    : "bg-white ring-1 ring-[color:var(--line)] text-[color:var(--ember)] shadow-sm";
+  const label = onBrand ? "text-white/60" : "text-[color:var(--muted)]";
+
   return (
     <div className="flex gap-2">
-      {cells.map(([v, label]) => (
+      {cells.map(([v, name]) => (
         <div
-          key={label}
-          className="card flex min-w-[64px] flex-col items-center rounded-xl px-2 py-2"
+          key={name}
+          className={`flex min-w-[66px] flex-col items-center rounded-2xl px-2 py-2.5 backdrop-blur-sm ${cell}`}
         >
-          <span className="text-xl font-bold tabular-nums text-white">
+          <span className="font-display text-[1.45rem] leading-none tabular-nums">
             {String(v).padStart(2, "0")}
           </span>
-          <span className="text-[10px] uppercase tracking-wide text-white/45">
-            {label}
+          <span
+            className={`mt-1 text-[0.6rem] font-bold uppercase tracking-wider ${label}`}
+          >
+            {name}
           </span>
         </div>
       ))}

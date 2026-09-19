@@ -53,13 +53,13 @@ export default async function AdminHome() {
 
   return (
     <main>
-      <h1 className="mb-5 text-2xl font-bold text-white">Statistika</h1>
+      <h1 className="mb-5 font-display text-2xl text-[color:var(--ember)]">Statistika</h1>
 
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {cards.map((c) => (
-          <div key={c.label} className="card rounded-2xl p-4">
-            <p className="text-2xl font-bold tabular-nums text-white">{c.value}</p>
-            <p className="mt-0.5 text-xs text-white/45">{c.label}</p>
+          <div key={c.label} className="card p-4">
+            <p className="font-display text-2xl tabular-nums text-[color:var(--ember)]">{c.value}</p>
+            <p className="mt-0.5 muted text-xs">{c.label}</p>
           </div>
         ))}
       </div>
@@ -70,17 +70,17 @@ export default async function AdminHome() {
         </div>
       )}
 
-      <section className="card mb-6 rounded-2xl p-5">
-        <h2 className="mb-4 font-semibold text-white">Oxirgi 24 soat</h2>
+      <section className="card mb-6 p-5">
+        <h2 className="mb-4 font-bold text-[color:var(--ember)]">Oxirgi 24 soat</h2>
         <div className="flex h-24 items-end gap-1">
           {hourly.length === 0 && (
-            <p className="text-sm text-white/40">Hali ovoz yo'q</p>
+            <p className="muted text-sm">Hali ovoz yo'q</p>
           )}
           {hourly.map((x) => (
             <div
               key={x.h}
               title={`${new Date(x.h).getHours()}:00 — ${x.n} ovoz`}
-              className="flex-1 rounded-t bg-gradient-to-t from-amber-500/40 to-amber-400"
+              className="flex-1 rounded-t bg-[color:var(--brand)]"
               style={{ height: `${(x.n / maxHour) * 100}%`, minHeight: 2 }}
             />
           ))}
@@ -89,19 +89,19 @@ export default async function AdminHome() {
 
       {branches.map((b) => (
         <section key={b.id} className="mb-6">
-          <h2 className="mb-3 font-semibold text-white">{b.name}</h2>
+          <h2 className="mb-3 font-bold text-[color:var(--ember)]">{b.name}</h2>
           <div className="grid gap-3">
             {NOMINATIONS.map((n) => {
               const rows = scores
                 .filter((x) => x.branch_id === b.id && x.nomination === n.key)
                 .slice(0, 5);
               return (
-                <div key={n.key} className="card rounded-2xl p-4">
-                  <p className="mb-2 text-sm font-medium text-white/80">
+                <div key={n.key} className="card p-4">
+                  <p className="mb-2 text-sm font-bold text-[color:var(--ember)]">
                     {n.emoji} {n.title}
                   </p>
                   {rows.length === 0 ? (
-                    <p className="text-xs text-white/35">Ovoz yo'q</p>
+                    <p className="muted text-xs">Ovoz yo'q</p>
                   ) : (
                     <ol className="space-y-1">
                       {rows.map((r, i) => (
@@ -109,11 +109,11 @@ export default async function AdminHome() {
                           key={r.teacher_id}
                           className="flex items-center justify-between text-sm"
                         >
-                          <span className="text-white/70">
-                            <span className="mr-2 text-white/30">{i + 1}.</span>
+                          <span className="text-[color:var(--ink)]">
+                            <span className="mr-2 muted">{i + 1}.</span>
                             {r.full_name}
                           </span>
-                          <span className="font-semibold tabular-nums text-amber-300">
+                          <span className="font-semibold tabular-nums text-[color:var(--brand)]">
                             {r.votes}
                           </span>
                         </li>
@@ -130,18 +130,18 @@ export default async function AdminHome() {
       <div className="flex flex-wrap gap-2">
         <Link
           href="/api/admin/export?type=scores"
-          className="rounded-xl border border-white/12 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5"
+          className="btn btn-ghost"
         >
           Natijalarni yuklab olish (CSV)
         </Link>
         <Link
           href="/api/admin/export?type=comments"
-          className="rounded-xl border border-white/12 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5"
+          className="btn btn-ghost"
         >
           Iliq so'zlar (CSV)
         </Link>
       </div>
-      <p className="mt-2 text-xs text-white/30">
+      <p className="mt-2 muted text-xs">
         Nominatsiyalar: {Object.keys(NOMINATION_MAP).filter(isNominationKey).length} ta
       </p>
     </main>

@@ -31,12 +31,12 @@ export default function TeacherSearch({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Ustoz ismini yozing…"
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none transition focus:border-amber-400/40 focus:bg-white/8"
+          className="input !py-3"
         />
         {q && (
           <button
             onClick={() => setQ("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--muted)] hover:text-[color:var(--brand)]"
             aria-label="Tozalash"
           >
             ✕
@@ -47,7 +47,7 @@ export default function TeacherSearch({
       <div className="grid gap-2.5">{filtered}</div>
 
       {needle && filtered.length === 0 && (
-        <p className="card mt-3 rounded-2xl p-6 text-center text-sm text-white/50">
+        <p className="card muted mt-3 p-6 text-center text-sm">
           “{q}” bo'yicha ustoz topilmadi.
         </p>
       )}

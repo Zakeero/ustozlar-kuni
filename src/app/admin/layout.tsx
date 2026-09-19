@@ -30,18 +30,18 @@ async function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div>
-      <nav className="card mb-6 flex flex-wrap gap-1 rounded-2xl p-1.5">
+      <nav className="card mb-6 flex flex-wrap gap-1 p-1.5">
         {nav.map((n) => (
           <Link
             key={n.href}
             href={n.href}
-            className="rounded-xl px-3 py-2 text-sm text-white/65 transition hover:bg-white/8 hover:text-white"
+            className="rounded-xl px-3 py-2 text-sm font-semibold text-[color:var(--muted)] transition hover:bg-[color:var(--sand)] hover:text-[color:var(--brand-700)]"
           >
             {n.label}
           </Link>
         ))}
         <form action={logout} className="ml-auto">
-          <button className="rounded-xl px-3 py-2 text-sm text-white/40 transition hover:text-rose-300">
+          <button className="muted rounded-xl px-3 py-2 text-sm transition hover:text-[#C02840]">
             Chiqish
           </button>
         </form>

@@ -37,41 +37,41 @@ export default async function CommentsPage() {
 
   return (
     <main>
-      <h1 className="mb-2 text-2xl font-bold text-white">Iliq so'zlar</h1>
-      <p className="mb-6 text-sm text-white/50">
+      <h1 className="mb-2 font-display text-2xl text-[color:var(--ember)]">Iliq so'zlar</h1>
+      <p className="mb-6 muted text-sm">
         Jami {rows.length} ta izoh. 1-oktyabrda har bir ustozga o'ziga yozilganlari
         albom qilib topshiriladi.
       </p>
 
       <a
         href="/api/admin/export?type=comments"
-        className="mb-6 inline-block rounded-xl border border-white/12 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5"
+        className="btn btn-ghost mb-6"
       >
         Hammasini CSV qilib yuklab olish
       </a>
 
       <div className="grid gap-4">
         {[...byTeacher.entries()].map(([key, items]) => (
-          <section key={key} className="card rounded-2xl p-5">
-            <h2 className="mb-3 font-semibold text-white">
+          <section key={key} className="card p-5">
+            <h2 className="mb-3 font-bold text-[color:var(--ember)]">
               {key}{" "}
-              <span className="text-sm font-normal text-white/40">
+              <span className="text-sm font-normal muted">
                 ({items.length})
               </span>
             </h2>
             <ul className="space-y-2.5">
               {items.map((r) => (
-                <li key={r.id} className="rounded-xl bg-white/4 p-3">
-                  <p className="text-sm leading-relaxed text-white/80">
+                <li key={r.id} className="rounded-xl bg-[color:var(--sand)]/60 p-3">
+                  <p className="text-sm leading-relaxed text-[color:var(--ink)]">
                     “{r.comment}”
                   </p>
                   <div className="mt-1.5 flex items-center justify-between">
-                    <span className="text-xs text-white/35">
+                    <span className="muted text-xs">
                       {r.author ?? "anonim"}
                     </span>
                     <form action={hideComment}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button className="text-xs text-rose-300/60 hover:text-rose-200">
+                      <button className="text-xs text-[#C02840]/70 hover:text-[#C02840]">
                         yashirish
                       </button>
                     </form>
@@ -84,7 +84,7 @@ export default async function CommentsPage() {
       </div>
 
       {rows.length === 0 && (
-        <p className="card rounded-2xl p-6 text-center text-sm text-white/40">
+        <p className="card p-6 text-center muted text-sm">
           Hali izoh yozilmagan.
         </p>
       )}

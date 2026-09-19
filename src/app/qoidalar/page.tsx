@@ -49,21 +49,28 @@ export default function RulesPage() {
 
   return (
     <main>
-      <BackLink href="/" label="Bosh sahifa" />
+      <div className="pt-4">
+        <BackLink href="/" label="Bosh sahifa" />
+      </div>
       <PageTitle title="Qoidalar" subtitle="Tanlov qanday o'tkaziladi" />
 
       <div className="grid gap-3">
         {rules.map((r, i) => (
           <section
             key={r.title}
-            className="card animate-in rounded-2xl p-5"
+            className="card animate-in flex gap-4 p-5"
             style={{ animationDelay: `${i * 50}ms` }}
           >
-            <h2 className="font-semibold text-white">
-              <span className="mr-2 text-amber-300/70">{i + 1}.</span>
-              {r.title}
-            </h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-white/55">{r.body}</p>
+            <span
+              className="font-display flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm text-white"
+              style={{ background: "linear-gradient(140deg,#FF8A5C,#EF5123)" }}
+            >
+              {i + 1}
+            </span>
+            <div className="min-w-0">
+              <h2 className="font-bold text-[color:var(--ember)]">{r.title}</h2>
+              <p className="muted mt-1.5 text-sm leading-relaxed">{r.body}</p>
+            </div>
           </section>
         ))}
       </div>

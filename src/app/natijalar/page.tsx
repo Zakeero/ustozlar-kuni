@@ -10,19 +10,16 @@ export default function ResultsPage() {
 
   if (open) {
     return (
-      <main className="flex min-h-[70vh] flex-col items-center justify-center text-center">
+      <main className="flex min-h-[60vh] flex-col items-center justify-center text-center">
         <p className="text-5xl">🗳</p>
-        <h1 className="mt-4 text-2xl font-bold text-white">
+        <h1 className="font-display mt-4 text-2xl text-[color:var(--ember)]">
           Ovoz berish davom etmoqda
         </h1>
-        <p className="mt-2 max-w-sm text-sm text-white/55">
+        <p className="muted mt-2.5 max-w-sm text-sm leading-relaxed">
           Natijalar ovoz berish yakunlangach e'lon qilinadi. Hozircha reyting
           yopiq — bu tanlovni adolatli saqlaydi.
         </p>
-        <Link
-          href="/filiallar"
-          className="mt-6 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3 text-sm font-semibold text-black"
-        >
+        <Link href="/filiallar" className="btn btn-primary mt-6">
           Ovoz berish
         </Link>
       </main>
@@ -31,20 +28,23 @@ export default function ResultsPage() {
 
   if (!published) {
     return (
-      <main className="flex min-h-[80vh] flex-col items-center justify-center text-center">
-        <div className="relative flex h-32 w-32 items-center justify-center">
-          <span className="absolute inset-0 rounded-full bg-amber-400/20 pulse-ring" />
+      <main className="flex min-h-[70vh] flex-col items-center justify-center text-center">
+        <div className="relative flex h-36 w-36 items-center justify-center">
           <span
-            className="absolute inset-0 rounded-full bg-amber-400/15 pulse-ring"
-            style={{ animationDelay: "0.7s" }}
+            className="pulse-ring absolute inset-0 rounded-full"
+            style={{ background: "rgba(239,81,35,.22)" }}
+          />
+          <span
+            className="pulse-ring absolute inset-0 rounded-full"
+            style={{ background: "rgba(232,163,61,.22)", animationDelay: "0.8s" }}
           />
           <span className="spin-slow text-6xl">🏆</span>
         </div>
 
-        <h1 className="mt-8 text-2xl font-bold text-white sm:text-3xl">
+        <h1 className="font-display mt-8 text-[1.75rem] text-[color:var(--ember)] sm:text-4xl">
           G'oliblar aniqlanmoqda…
         </h1>
-        <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/55">
+        <p className="muted mt-3 max-w-sm text-sm leading-relaxed">
           Ovoz berish yakunlandi. Hakamlar ovozlarni tekshirmoqda — g'oliblar
           bugun kanalimizda e'lon qilinadi.
         </p>
@@ -53,10 +53,7 @@ export default function ResultsPage() {
           <Countdown endsAt={RESULTS_AT.toISOString()} />
         </div>
 
-        <a
-          href={`https://t.me/${SITE.channel}`}
-          className="mt-8 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 px-6 py-3 text-sm font-semibold text-black transition hover:brightness-110"
-        >
+        <a href={`https://t.me/${SITE.channel}`} className="btn btn-primary mt-8">
           Kanalda kuzatib borish
         </a>
       </main>
@@ -64,16 +61,15 @@ export default function ResultsPage() {
   }
 
   return (
-    <main className="flex min-h-[70vh] flex-col items-center justify-center text-center">
+    <main className="flex min-h-[60vh] flex-col items-center justify-center text-center">
       <p className="text-5xl">🏆</p>
-      <h1 className="mt-4 text-2xl font-bold text-white">G'oliblar e'lon qilindi</h1>
-      <p className="mt-2 max-w-sm text-sm text-white/55">
+      <h1 className="font-display mt-4 text-2xl text-[color:var(--ember)]">
+        G'oliblar e'lon qilindi
+      </h1>
+      <p className="muted mt-2.5 max-w-sm text-sm">
         Barcha nominatsiyalar bo'yicha g'oliblar kanalimizda e'lon qilindi.
       </p>
-      <a
-        href={`https://t.me/${SITE.channel}`}
-        className="mt-6 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3 text-sm font-semibold text-black"
-      >
+      <a href={`https://t.me/${SITE.channel}`} className="btn btn-primary mt-6">
         Kanalga o'tish
       </a>
     </main>

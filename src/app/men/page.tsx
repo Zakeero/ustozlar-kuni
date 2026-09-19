@@ -31,64 +31,76 @@ export default async function MePage() {
 
   return (
     <main>
-      <BackLink href="/filiallar" label="Filiallar" />
+      <div className="pt-4">
+        <BackLink href="/filiallar" label="Filiallar" />
+      </div>
       <PageTitle
         title="Mening sahifam"
         subtitle={`${user.first_name ?? ""} ${user.last_name ?? ""}`.trim()}
       />
 
-      <section className="card mb-6 rounded-2xl p-5">
-        <div className="flex flex-wrap gap-2">
-          <Badge tone="gold">Qolgan ovozlar: {budget.totalLeft}</Badge>
-          <Badge>
-            Asosiy: {budget.mainUsed}/{budget.mainUsed + budget.mainLeft}
-          </Badge>
-          <Badge tone="green">
-            Bonus: {budget.bonusUsed}/{budget.bonusEarned}
-          </Badge>
+      <section className="card-brand mb-6 p-6">
+        <div className="relative">
+          <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-white/65">
+            Qolgan ovozlaringiz
+          </p>
+          <p className="font-display mt-1 text-5xl leading-none text-white">
+            {budget.totalLeft}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold">
+            <span className="rounded-full bg-white/15 px-3 py-1.5 text-white ring-1 ring-white/20">
+              Asosiy: {budget.mainUsed}/{budget.mainUsed + budget.mainLeft}
+            </span>
+            <span className="rounded-full bg-white/15 px-3 py-1.5 text-white ring-1 ring-white/20">
+              Bonus: {budget.bonusUsed}/{budget.bonusEarned}
+            </span>
+          </div>
         </div>
       </section>
 
-      <section className="card mb-6 rounded-2xl p-5">
-        <h2 className="font-semibold text-white">Do'stlarni taklif qiling</h2>
-        <p className="mt-1 text-sm text-white/55">
+      <section className="card mb-6 p-6">
+        <span className="eyebrow">Ko'proq ovoz</span>
+        <h2 className="font-display mt-2 text-xl text-[color:var(--ember)]">
+          Do'stlarni taklif qiling
+        </h2>
+        <p className="muted mt-2 text-sm leading-relaxed">
           Havolangiz orqali kelgan har bir do'st ovoz berganda sizga{" "}
-          <b className="text-white">+1 ovoz</b> qo'shiladi. Ko'pi bilan{" "}
-          {MAX_BONUS_VOTES} ta.
+          <b className="text-[color:var(--brand-700)]">+1 ovoz</b> qo'shiladi.
+          Ko'pi bilan {MAX_BONUS_VOTES} ta.
         </p>
 
-        <div className="mt-4 flex items-center gap-3 text-sm">
-          <div className="flex-1">
-            <div className="h-2 overflow-hidden rounded-full bg-white/8">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+        <div className="mt-5 flex items-center gap-3">
+          <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-[color:var(--sand)]">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{
+                width: `${progress}%`,
+                background: "linear-gradient(90deg,#EF5123,#E8A33D)",
+              }}
+            />
           </div>
-          <span className="tabular-nums text-white/60">
+          <span className="text-sm font-bold tabular-nums text-[color:var(--ember)]">
             {budget.referralsCounted}/{MAX_BONUS_VOTES}
           </span>
         </div>
-        <p className="mt-1.5 text-xs text-white/35">
+        <p className="muted mt-2 text-xs">
           Taklif qilinganlar: {budget.referralsTotal} · ovoz berganlar:{" "}
           {budget.referralsCounted}
         </p>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <ReferralBox link={link} />
         </div>
       </section>
 
       <section>
-        <h2 className="mb-3 font-semibold text-white">Mening ovozlarim</h2>
+        <h2 className="font-display rule mb-5 text-xl text-[color:var(--ember)]">
+          Mening ovozlarim
+        </h2>
         {votes.length === 0 ? (
-          <div className="card rounded-2xl p-6 text-center">
-            <p className="text-sm text-white/50">Siz hali ovoz bermagansiz.</p>
-            <Link
-              href="/filiallar"
-              className="mt-3 inline-block rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black"
-            >
+          <div className="card p-7 text-center">
+            <p className="muted text-sm">Siz hali ovoz bermagansiz.</p>
+            <Link href="/filiallar" className="btn btn-primary mt-4">
               Ovoz berish
             </Link>
           </div>
@@ -100,13 +112,16 @@ export default async function MePage() {
                 ? NOMINATION_MAP[v.nomination]
                 : null;
               return (
-                <div key={v.id} className="card flex items-center gap-3 rounded-2xl p-3.5">
-                  <Avatar name={t?.full_name ?? "?"} src={t?.photo_url} size={44} />
+                <div key={v.id} className="card flex items-center gap-3.5 p-3.5">
+                  <Avatar name={t?.full_name ?? "?"} src={t?.photo_url} size={46} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-white">
+                    <p className="truncate font-bold text-[color:var(--ink)]">
                       {t?.full_name ?? "Ustoz"}
                     </p>
-                    <p className="truncate text-xs text-white/45">
+                    <p
+                      className="truncate text-xs font-semibold"
+                      style={{ color: nom?.tint ?? "var(--muted)" }}
+                    >
                       {nom ? `${nom.emoji} ${nom.title}` : v.nomination}
                     </p>
                   </div>

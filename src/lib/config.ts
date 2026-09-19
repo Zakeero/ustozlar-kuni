@@ -45,8 +45,10 @@ export interface Nomination {
   emoji: string;
   title: string;
   description: string;
-  /** Tailwind gradient — kartochka va tugma ranglari */
+  /** CSS gradient — kartochka belgisi foni */
   accent: string;
+  /** Yordamchi rang — chegara va matn uchun */
+  tint: string;
 }
 
 /**
@@ -59,35 +61,40 @@ export const NOMINATIONS: Nomination[] = [
     emoji: "🔥",
     title: "Eng qiziqarli dars",
     description: "Darsi zerikarli o'tmaydigan, hamma intiladigan ustoz",
-    accent: "from-orange-500 to-red-500",
+    accent: "linear-gradient(140deg, #FF7A3D, #EF5123)",
+    tint: "#EF5123",
   },
   {
     key: "bolt",
     emoji: "⚡",
     title: "Eng talabchan ustoz",
     description: "Qattiqqo'l, lekin aynan shuning uchun natija beradigan ustoz",
-    accent: "from-amber-400 to-yellow-500",
+    accent: "linear-gradient(140deg, #F6C453, #E8A33D)",
+    tint: "#B97D14",
   },
   {
     key: "smile",
     emoji: "😊",
     title: "Eng samimiy ustoz",
     description: "Har doim kulib turadigan, iliq muomalali ustoz",
-    accent: "from-sky-400 to-blue-500",
+    accent: "linear-gradient(140deg, #FFB08A, #F07A4B)",
+    tint: "#C9562A",
   },
   {
     key: "heart",
     emoji: "🧡",
     title: "Eng g'amxo'r ustoz",
     description: "O'quvchisini tushunadigan, doim yordamga tayyor ustoz",
-    accent: "from-rose-400 to-pink-500",
+    accent: "linear-gradient(140deg, #F2656B, #D6304A)",
+    tint: "#C02840",
   },
   {
     key: "like",
     emoji: "👍",
     title: "Eng bilimdon ustoz",
     description: "Fanini mukammal biladigan, har savolga javobi bor ustoz",
-    accent: "from-emerald-400 to-teal-500",
+    accent: "linear-gradient(140deg, #2AA6A0, #12807C)",
+    tint: "#0C5F5C",
   },
 ];
 

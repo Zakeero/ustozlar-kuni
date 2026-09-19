@@ -21,13 +21,11 @@ export default function ReferralBox({ link }: { link: string }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-2">
-        <code className="min-w-0 flex-1 truncate px-2 text-xs text-white/70">
-          {link}
-        </code>
+      <div className="flex items-center gap-2 rounded-2xl border border-[color:var(--line)] bg-white p-2">
+        <code className="muted min-w-0 flex-1 truncate px-2 text-xs">{link}</code>
         <button
           onClick={copy}
-          className="shrink-0 rounded-lg bg-white/10 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/15"
+          className="shrink-0 rounded-xl bg-[color:var(--sand)] px-3 py-2 text-xs font-bold text-[color:var(--brand-700)] transition hover:bg-[color:var(--brand-100)]"
         >
           {copied ? "Nusxalandi ✓" : "Nusxalash"}
         </button>
@@ -37,7 +35,7 @@ export default function ReferralBox({ link }: { link: string }) {
         href={`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${shareText}`}
         target="_blank"
         rel="noreferrer"
-        className="block w-full rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 px-5 py-3 text-center text-sm font-semibold text-black transition hover:brightness-110"
+        className="btn btn-primary w-full"
       >
         Telegramda ulashish
       </a>

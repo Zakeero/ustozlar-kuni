@@ -1,6 +1,13 @@
 import Link from "next/link";
 import Countdown from "@/components/Countdown";
-import { NOMINATIONS, SITE, VOTING_ENDS_AT, MAIN_VOTES, votingOpen } from "@/lib/config";
+import {
+  NOMINATIONS,
+  SITE,
+  VOTING_ENDS_AT,
+  MAIN_VOTES,
+  MAX_BONUS_VOTES,
+  votingOpen,
+} from "@/lib/config";
 import { getCurrentUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -21,101 +28,188 @@ export default async function Home({
         ? "Havola noto'g'ri. Botdagi tugma orqali kiring."
         : null;
 
+  const steps = [
+    {
+      n: "01",
+      title: "Botga kiring",
+      text: "Telegram bot orqali kirasiz va telefon raqamingizni tasdiqlaysiz.",
+    },
+    {
+      n: "02",
+      title: "Ustozni tanlang",
+      text: `Filialni oching, ustozingizni toping — sizda ${MAIN_VOTES} ta ovoz bor.`,
+    },
+    {
+      n: "03",
+      title: "Iliq so'z yozing",
+      text: "Ovoz bilan birga yozgan so'zlaringiz ustozga albom bo'lib topshiriladi.",
+    },
+  ];
+
   return (
     <main>
       {errorText && (
-        <div className="mb-4 rounded-xl border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
+        <div className="mt-5 rounded-2xl border border-[color:var(--brand-300)] bg-[color:var(--sand)] px-4 py-3 text-sm font-medium text-[color:var(--brand-700)]">
           {errorText}
         </div>
       )}
 
-      <section className="animate-in card mt-6 rounded-3xl p-6 text-center sm:p-10">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300/80">
-          1-oktyabr · Ustozlar va murabbiylar kuni
-        </p>
-        <h1 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-4xl">
-          Yilning eng yaxshi ustozi
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/60">
-          {SITE.org} ustozlariga minnatdorchilik bildiring. Sizda{" "}
-          <span className="font-semibold text-white">{MAIN_VOTES} ta ovoz</span> bor —
-          har birini boshqa ustozga berasiz.
-        </p>
+      {/* ---------- Hero ---------- */}
+      <section className="card-brand animate-in mt-6 px-6 py-10 text-center sm:px-10 sm:py-14">
+        <div className="relative">
+          <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.22em] text-white/75">
+            1-oktyabr · Ustozlar va murabbiylar kuni
+          </p>
 
-        <div className="mt-6 flex flex-col items-center gap-3">
-          {open ? (
-            <>
-              <p className="text-xs uppercase tracking-wider text-white/40">
-                Ovoz berish yakunlanishiga
+          <h1 className="font-display mt-4 text-[2.1rem] leading-[1.05] text-white sm:text-[3.25rem]">
+            Yilning eng
+            <br />
+            yaxshi ustozi
+          </h1>
+
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/80 sm:text-base">
+            Bir yil davomida sizga bilim bergan insonga rahmat aytishning eng
+            qisqa yo'li. Sizda{" "}
+            <b className="text-white">{MAIN_VOTES} ta ovoz</b> bor — har birini
+            boshqa ustozga berasiz.
+          </p>
+
+          <div className="mt-8 flex flex-col items-center gap-3">
+            {open ? (
+              <>
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60">
+                  Ovoz berish yakunlanishiga
+                </p>
+                <Countdown endsAt={VOTING_ENDS_AT.toISOString()} onBrand />
+              </>
+            ) : (
+              <p className="badge badge-gold !bg-white/15 !text-white !border-white/25">
+                Ovoz berish yakunlandi
               </p>
-              <Countdown endsAt={VOTING_ENDS_AT.toISOString()} />
-            </>
-          ) : (
-            <p className="text-sm text-amber-200">Ovoz berish yakunlandi</p>
-          )}
-        </div>
+            )}
+          </div>
 
-        <div className="mt-7 flex flex-col gap-2 sm:flex-row sm:justify-center">
-          {!open ? (
+          <div className="mt-9 flex flex-col gap-2.5 sm:flex-row sm:justify-center">
+            {!open ? (
+              <Link href="/natijalar" className="btn btn-light">
+                Natijalarni ko'rish
+              </Link>
+            ) : user ? (
+              <Link href="/filiallar" className="btn btn-light">
+                Ovoz berishni boshlash →
+              </Link>
+            ) : (
+              <a
+                href={`https://t.me/${SITE.botUsername}?start=web`}
+                className="btn btn-light"
+              >
+                Telegram orqali kirish →
+              </a>
+            )}
             <Link
-              href="/natijalar"
-              className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3 text-sm font-semibold text-black transition hover:brightness-110"
+              href="/qoidalar"
+              className="btn !bg-white/12 !text-white ring-1 ring-white/25 hover:!bg-white/20"
             >
-              Natijalarni ko'rish
+              Qanday ishlaydi
             </Link>
-          ) : user ? (
-            <Link
-              href="/filiallar"
-              className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3 text-sm font-semibold text-black transition hover:brightness-110"
-            >
-              Ovoz berishni boshlash
-            </Link>
-          ) : (
-            <a
-              href={`https://t.me/${SITE.botUsername}?start=web`}
-              className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3 text-sm font-semibold text-black transition hover:brightness-110"
-            >
-              Telegram orqali kirish
-            </a>
-          )}
-          <Link
-            href="/qoidalar"
-            className="rounded-xl border border-white/12 px-6 py-3 text-sm font-medium text-white/80 transition hover:bg-white/5"
-          >
-            Qoidalar
-          </Link>
+          </div>
         </div>
       </section>
 
-      <section className="mt-10">
-        <h2 className="mb-4 text-lg font-semibold text-white">Nominatsiyalar</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {NOMINATIONS.map((n, i) => (
+      {/* ---------- Qanday ishlaydi ---------- */}
+      <section className="mt-12">
+        <h2 className="font-display rule text-xl text-[color:var(--ember)]">
+          Uch qadamda
+        </h2>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          {steps.map((s, i) => (
             <div
-              key={n.key}
-              className="card animate-in rounded-2xl p-4"
-              style={{ animationDelay: `${i * 60}ms` }}
+              key={s.n}
+              className="card animate-in p-5"
+              style={{ animationDelay: `${i * 80}ms` }}
             >
-              <div className="flex items-start gap-3">
-                <div
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${n.accent} text-xl`}
-                >
-                  {n.emoji}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">{n.title}</h3>
-                  <p className="mt-0.5 text-xs leading-relaxed text-white/50">
-                    {n.description}
-                  </p>
-                </div>
-              </div>
+              <span className="font-display text-2xl text-[#FFB197]">{s.n}</span>
+              <h3 className="mt-1 font-bold text-[color:var(--ink)]">
+                {s.title}
+              </h3>
+              <p className="muted mt-1 text-[0.82rem] leading-relaxed">
+                {s.text}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      <p className="mt-10 text-center text-xs text-white/35">
-        Har bir nominatsiya bo'yicha g'olib <b>har filialda alohida</b> aniqlanadi.
+      {/* ---------- Nominatsiyalar ---------- */}
+      <section className="mt-12">
+        <h2 className="font-display rule text-xl text-[color:var(--ember)]">
+          Besh nominatsiya
+        </h2>
+        <p className="muted mt-3 text-sm">
+          Ovoz berayotganda qaysi nominatsiyani tanlashingiz sizga bog'liq — har
+          bir reaksiya alohida g'olibni aniqlaydi.
+        </p>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {NOMINATIONS.map((n, i) => (
+            <article
+              key={n.key}
+              className="card card-hover animate-in flex items-start gap-3.5 p-4"
+              style={{ animationDelay: `${i * 70}ms` }}
+            >
+              <div
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[1.35rem] shadow-sm"
+                style={{ background: n.accent }}
+              >
+                {n.emoji}
+              </div>
+              <div className="min-w-0">
+                <h3
+                  className="font-bold leading-tight"
+                  style={{ color: n.tint }}
+                >
+                  {n.title}
+                </h3>
+                <p className="muted mt-1 text-[0.8rem] leading-relaxed">
+                  {n.description}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- Referal ---------- */}
+      <section className="card animate-in mt-12 overflow-hidden p-0">
+        <div className="grid sm:grid-cols-[1.4fr_1fr]">
+          <div className="p-6 sm:p-7">
+            <span className="eyebrow">Qo'shimcha ovoz</span>
+            <h2 className="font-display mt-2 text-xl text-[color:var(--ember)]">
+              Do'stingizni taklif qiling
+            </h2>
+            <p className="muted mt-2 text-sm leading-relaxed">
+              Havolangiz orqali kelgan har bir do'st ovoz berganda sizga{" "}
+              <b className="text-[color:var(--brand-700)]">+1 ovoz</b> qo'shiladi
+              — ko'pi bilan {MAX_BONUS_VOTES} ta. Ustozingiz uchun kurashing.
+            </p>
+          </div>
+          <div
+            className="flex items-center justify-center gap-1 p-6 text-3xl"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(239,81,35,.10), rgba(232,163,61,.16))",
+            }}
+          >
+            <span>🤝</span>
+            <span className="text-[color:var(--brand)]">+1</span>
+          </div>
+        </div>
+      </section>
+
+      <p className="muted mt-10 text-center text-xs">
+        Har bir nominatsiya bo'yicha g'olib{" "}
+        <b className="text-[color:var(--ember)]">har filialda alohida</b>{" "}
+        aniqlanadi — yutqazgan ustoz bo'lmaydi.
       </p>
     </main>
   );

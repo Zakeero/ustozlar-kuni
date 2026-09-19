@@ -29,11 +29,16 @@ export default async function BranchesPage() {
         subtitle="Ustozingiz qaysi filialda dars beradi?"
       />
 
-      <div className="card mb-6 flex flex-wrap items-center gap-2 rounded-2xl p-4">
-        <Badge tone="gold">Qolgan ovozlar: {budget.totalLeft}</Badge>
+      <div className="card mb-6 flex flex-wrap items-center gap-2 p-4">
+        <Badge tone="red">Qolgan ovozlar: {budget.totalLeft}</Badge>
         <Badge>Asosiy: {budget.mainLeft}</Badge>
-        {budget.bonusEarned > 0 && <Badge tone="green">Bonus: {budget.bonusLeft}</Badge>}
-        <Link href="/men" className="ml-auto text-xs text-amber-300 hover:underline">
+        {budget.bonusEarned > 0 && (
+          <Badge tone="green">Bonus: {budget.bonusLeft}</Badge>
+        )}
+        <Link
+          href="/men"
+          className="ml-auto text-xs font-bold text-[color:var(--brand)] hover:underline"
+        >
           Mening sahifam →
         </Link>
       </div>
@@ -43,23 +48,31 @@ export default async function BranchesPage() {
           <Link
             key={b.id}
             href={`/filial/${b.slug}`}
-            className="card card-hover animate-in flex items-center justify-between rounded-2xl p-5"
-            style={{ animationDelay: `${i * 70}ms` }}
+            className="card card-hover animate-in flex items-center gap-4 p-5"
+            style={{ animationDelay: `${i * 80}ms` }}
           >
-            <div>
-              <h2 className="text-lg font-semibold text-white">{b.name}</h2>
-              <p className="mt-0.5 text-xs text-white/45">
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg"
+              style={{ background: "linear-gradient(140deg,#FFD9C9,#FFB08A)" }}
+            >
+              🏫
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-lg text-[color:var(--ember)]">
+                {b.name}
+              </h2>
+              <p className="muted mt-0.5 text-xs">
                 {b.address ? `${b.address} · ` : ""}
                 {countMap.get(b.id) ?? 0} ta ustoz
               </p>
             </div>
-            <span className="text-white/30">→</span>
+            <span className="text-[color:var(--brand-300)]">→</span>
           </Link>
         ))}
       </div>
 
       {branches.length === 0 && (
-        <p className="card rounded-2xl p-6 text-center text-sm text-white/50">
+        <p className="card muted p-6 text-center text-sm">
           Filiallar hali qo'shilmagan.
         </p>
       )}

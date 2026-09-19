@@ -24,7 +24,7 @@ export function Avatar({
         alt={name}
         width={size}
         height={size}
-        className="rounded-2xl object-cover"
+        className="rounded-2xl object-cover ring-1 ring-[color:var(--line)]"
         style={{ width: size, height: size }}
       />
     );
@@ -32,8 +32,14 @@ export function Avatar({
 
   return (
     <div
-      className="flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400/25 to-sky-500/20 font-semibold text-amber-100 ring-1 ring-white/10"
-      style={{ width: size, height: size, fontSize: size / 2.8 }}
+      className="flex items-center justify-center rounded-2xl font-extrabold text-white"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size / 2.9,
+        background: "linear-gradient(140deg, #FF8A5C, #EF5123)",
+        boxShadow: "0 8px 18px -10px rgba(239,81,35,.8)",
+      }}
     >
       {initials || "?"}
     </div>
@@ -44,7 +50,7 @@ export function BackLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 text-sm text-white/55 transition hover:text-white"
+      className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--muted)] transition hover:text-[color:var(--brand)]"
     >
       <span aria-hidden>←</span> {label}
     </Link>
@@ -60,10 +66,10 @@ export function PageTitle({
 }) {
   return (
     <header className="animate-in mb-6 mt-4">
-      <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+      <h1 className="font-display rule text-2xl text-[color:var(--ember)] sm:text-3xl">
         {title}
       </h1>
-      {subtitle && <p className="mt-1.5 text-sm text-white/55">{subtitle}</p>}
+      {subtitle && <p className="muted mt-3 text-sm">{subtitle}</p>}
     </header>
   );
 }
@@ -75,17 +81,11 @@ export function Badge({
   children: React.ReactNode;
   tone?: "default" | "gold" | "green" | "red";
 }) {
-  const tones = {
-    default: "bg-white/8 text-white/70 ring-white/10",
-    gold: "bg-amber-400/12 text-amber-200 ring-amber-400/25",
-    green: "bg-emerald-400/12 text-emerald-200 ring-emerald-400/25",
-    red: "bg-rose-400/12 text-rose-200 ring-rose-400/25",
-  };
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${tones[tone]}`}
-    >
-      {children}
-    </span>
-  );
+  const map = {
+    default: "badge-muted",
+    gold: "badge-gold",
+    green: "badge-teal",
+    red: "badge-brand",
+  } as const;
+  return <span className={`badge ${map[tone]}`}>{children}</span>;
 }

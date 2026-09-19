@@ -87,16 +87,16 @@ export default async function SuspiciousPage() {
 
   return (
     <main>
-      <h1 className="mb-2 text-2xl font-bold text-white">Shubhali faollik</h1>
-      <p className="mb-6 text-sm text-white/50">
+      <h1 className="mb-2 font-display text-2xl text-[color:var(--ember)]">Shubhali faollik</h1>
+      <p className="mb-6 muted text-sm">
         Bu yerdagi ma'lumot avtomatik belgilar — aybdorlik isboti emas. Ovozlarni
         bekor qilishdan oldin tekshiring.
       </p>
 
       <section className="mb-8">
-        <h2 className="mb-3 font-semibold text-white">Yirik referal daraxtlari</h2>
+        <h2 className="mb-3 font-bold text-[color:var(--ember)]">Yirik referal daraxtlari</h2>
         {trees.length === 0 ? (
-          <p className="card rounded-2xl p-5 text-sm text-white/40">
+          <p className="card p-5 muted text-sm">
             Hozircha shubhali daraxt yo'q.
           </p>
         ) : (
@@ -105,18 +105,18 @@ export default async function SuspiciousPage() {
               const concentration = t.voted ? t.top_share / t.voted : 0;
               const risky = concentration > 0.8 && t.voted >= 5;
               return (
-                <div key={t.inviter_id} className="card rounded-2xl p-4">
+                <div key={t.inviter_id} className="card p-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-medium text-white">
+                    <p className="font-bold text-[color:var(--ink)]">
                       {t.inviter_name ?? "—"}{" "}
                       {t.username && (
-                        <span className="text-white/35">@{t.username}</span>
+                        <span className="muted">@{t.username}</span>
                       )}
                     </p>
                     {risky && <Badge tone="red">jamlangan</Badge>}
                     {t.is_blocked && <Badge tone="red">bloklangan</Badge>}
                   </div>
-                  <p className="mt-1 text-xs text-white/45">
+                  <p className="mt-1 muted text-xs">
                     Taklif: {t.invited} · ovoz bergan: {t.voted}
                     {t.top_teacher && (
                       <>
@@ -129,13 +129,13 @@ export default async function SuspiciousPage() {
                   <div className="mt-3 flex gap-2">
                     <form action={toggleUserBlock}>
                       <input type="hidden" name="id" value={t.inviter_id} />
-                      <button className="rounded-lg bg-white/8 px-3 py-1.5 text-xs text-white hover:bg-white/12">
+                      <button className="btn btn-ghost !px-3 !py-1.5 !text-xs">
                         {t.is_blocked ? "Blokdan chiqarish" : "Bloklash"}
                       </button>
                     </form>
                     <form action={invalidateReferralTree}>
                       <input type="hidden" name="inviter_id" value={t.inviter_id} />
-                      <button className="rounded-lg px-3 py-1.5 text-xs text-rose-300/70 hover:bg-rose-400/10 hover:text-rose-200">
+                      <button className="rounded-lg px-3 py-1.5 text-xs text-[#C02840] hover:bg-[#C02840]/8">
                         Daraxt ovozlarini bekor qilish
                       </button>
                     </form>
@@ -148,51 +148,51 @@ export default async function SuspiciousPage() {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 font-semibold text-white">Bitta tarmoqdan ko'p akkaunt</h2>
+        <h2 className="mb-3 font-bold text-[color:var(--ember)]">Bitta tarmoqdan ko'p akkaunt</h2>
         {ips.length === 0 ? (
-          <p className="card rounded-2xl p-5 text-sm text-white/40">Belgi yo'q.</p>
+          <p className="card p-5 muted text-sm">Belgi yo'q.</p>
         ) : (
           <div className="grid gap-2">
             {ips.map((g) => (
               <div
                 key={g.ip_hash}
-                className="card flex items-center justify-between rounded-xl p-3 text-sm"
+                className="card flex items-center justify-between rounded-xl border border-[color:var(--line)] bg-white p-3 text-sm"
               >
-                <code className="text-xs text-white/40">
+                <code className="muted text-xs">
                   {g.ip_hash.slice(0, 12)}…
                 </code>
-                <span className="text-white/70">
+                <span className="text-[color:var(--ink)]">
                   {g.users} ta akkaunt · {g.votes} ovoz
                 </span>
               </div>
             ))}
           </div>
         )}
-        <p className="mt-2 text-xs text-white/30">
+        <p className="mt-2 muted text-xs">
           Eslatma: bitta maktab yoki filial Wi-Fi'si ham shunday ko'rinadi.
         </p>
       </section>
 
       <section>
-        <h2 className="mb-3 font-semibold text-white">Juda tez ovoz berganlar</h2>
+        <h2 className="mb-3 font-bold text-[color:var(--ember)]">Juda tez ovoz berganlar</h2>
         {fast.length === 0 ? (
-          <p className="card rounded-2xl p-5 text-sm text-white/40">Belgi yo'q.</p>
+          <p className="card p-5 muted text-sm">Belgi yo'q.</p>
         ) : (
           <div className="grid gap-2">
             {fast.map((u) => (
               <div
                 key={u.id}
-                className="card flex items-center justify-between rounded-xl p-3 text-sm"
+                className="card flex items-center justify-between rounded-xl border border-[color:var(--line)] bg-white p-3 text-sm"
               >
-                <span className="text-white/70">
+                <span className="text-[color:var(--ink)]">
                   {u.first_name ?? "—"}{" "}
-                  {u.username && <span className="text-white/35">@{u.username}</span>}
+                  {u.username && <span className="muted">@{u.username}</span>}
                 </span>
                 <div className="flex items-center gap-3">
-                  <span className="text-white/45">{u.seconds}s</span>
+                  <span className="muted">{u.seconds}s</span>
                   <form action={toggleUserBlock}>
                     <input type="hidden" name="id" value={u.id} />
-                    <button className="rounded-lg bg-white/8 px-2.5 py-1 text-xs text-white hover:bg-white/12">
+                    <button className="btn btn-ghost !px-2.5 !py-1 !text-xs">
                       {u.is_blocked ? "Blokdan" : "Blok"}
                     </button>
                   </form>
