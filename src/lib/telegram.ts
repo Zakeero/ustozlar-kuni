@@ -31,13 +31,13 @@ export async function createAuthToken(userId: number): Promise<string> {
   return token;
 }
 
-/** Tokenni ishlatish — faqat bir marta va 10 daqiqa ichida */
+/** Tokenni ishlatish — faqat bir marta va 1 soat ichida */
 export async function consumeAuthToken(token: string): Promise<number | null> {
   const rows = (await sql`
     UPDATE auth_tokens SET used_at = now()
     WHERE token = ${token}
       AND used_at IS NULL
-      AND created_at > now() - interval '10 minutes'
+      AND created_at > now() - interval '60 minutes'
     RETURNING user_id
   `) as { user_id: number }[];
   return rows[0]?.user_id ?? null;

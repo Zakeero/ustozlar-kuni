@@ -2,12 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { SITE } from "@/lib/config";
 
 declare global {
   interface Window {
     Telegram?: {
       WebApp?: {
         initData?: string;
+        platform?: string;
+        version?: string;
+        initDataUnsafe?: { user?: { id?: number } };
         ready?: () => void;
         expand?: () => void;
       };
@@ -17,10 +21,29 @@ declare global {
 
 type Phase = "idle" | "working" | "failed";
 
+/** Telegram ma'lumotni URL hash orqali uzatadi — zaxira o'qish yo'li */
+function initDataFromHash(): string {
+  try {
+    const raw = window.location.hash.replace(/^#/, "");
+    if (!raw) return "";
+    return new URLSearchParams(raw).get("tgWebAppData") ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function insideTelegram(): boolean {
+  const wa = window.Telegram?.WebApp;
+  if (!wa) return false;
+  const p = wa.platform;
+  return Boolean(
+    (p && p !== "unknown") || wa.initDataUnsafe?.user?.id || initDataFromHash(),
+  );
+}
+
 /**
- * Sayt Telegram ichida (Mini App) ochilganda foydalanuvchini avtomatik tanib oladi.
- * Cookie almashinuvi kerak emas — Telegram imzolagan initData yetarli.
- * Oddiy brauzerda hech narsa qilmaydi.
+ * Panel Telegram ichida ochilganda foydalanuvchini avtomatik tanib oladi.
+ * Asosiy yo'l — botdagi tugmaga kiritilgan kirish kaliti; bu esa zaxira.
  */
 export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
   const router = useRouter();
@@ -30,12 +53,11 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
   useEffect(() => {
     if (loggedIn || tried.current) return;
 
-    // telegram-web-app.js async yuklanadi — bir necha marta tekshiramiz
     let attempts = 0;
     const timer = setInterval(() => {
       attempts += 1;
       const wa = window.Telegram?.WebApp;
-      const initData = wa?.initData;
+      const initData = wa?.initData || initDataFromHash();
 
       if (wa && initData) {
         clearInterval(timer);
@@ -62,8 +84,15 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
         return;
       }
 
-      // 3 soniyadan keyin — demak oddiy brauzer, aralashmaymiz
-      if (attempts > 15) clearInterval(timer);
+      // 8 soniya kutamiz — sekin ulanishda skript kech yuklanishi mumkin
+      if (attempts > 40) {
+        clearInterval(timer);
+        // Telegram ichidamiz, lekin ma'lumot kelmadi — jim qolmaymiz
+        if (insideTelegram()) {
+          tried.current = true;
+          setPhase("failed");
+        }
+      }
     }, 200);
 
     return () => clearInterval(timer);
@@ -85,13 +114,20 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
         </>
       ) : (
         <>
-          <span className="text-4xl">⚠️</span>
+          <span className="text-4xl">🔑</span>
           <p className="font-display text-lg text-[color:var(--ember)]">
-            Kirib bo'lmadi
+            Panelni qayta oching
           </p>
           <p className="muted max-w-xs text-sm leading-relaxed">
-            Panelni yopib, botga <b>/ovoz</b> yuboring va tugmani qayta bosing.
+            Bu panelni yoping, botga <b>/ovoz</b> yuboring va kelgan xabardagi
+            <b> 🗳 Ovoz berish</b> tugmasini bosing.
           </p>
+          <a
+            href={`https://t.me/${SITE.botUsername}?start=ovoz`}
+            className="btn btn-primary mt-2"
+          >
+            Botni ochish
+          </a>
         </>
       )}
     </div>

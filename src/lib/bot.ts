@@ -50,12 +50,16 @@ async function sendPanel(
   ctx: { reply: (t: string, o?: object) => Promise<unknown> },
   userId: number,
 ) {
-  const kb = new InlineKeyboard().webApp(VOTE_BUTTON, APP_URL);
+  // Panel tugmasi kirish kalitini o'zi bilan olib boradi — shunda panel
+  // ochilishi bilan foydalanuvchi tanilgan bo'ladi, hech narsa kutilmaydi.
+  let kb: InlineKeyboard;
   try {
-    const token = await createAuthToken(userId);
-    kb.row().url("🌐 Brauzerda ochish", loginUrl(token));
+    const panelToken = await createAuthToken(userId);
+    kb = new InlineKeyboard().webApp(VOTE_BUTTON, loginUrl(panelToken));
+    const browserToken = await createAuthToken(userId);
+    kb.row().url("🌐 Brauzerda ochish", loginUrl(browserToken));
   } catch {
-    /* zaxira tugmasiz ham davom etaveradi */
+    kb = new InlineKeyboard().webApp(VOTE_BUTTON, APP_URL);
   }
 
   await ctx.reply(
