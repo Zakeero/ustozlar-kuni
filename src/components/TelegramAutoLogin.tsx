@@ -53,6 +53,18 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
   useEffect(() => {
     if (loggedIn || tried.current) return;
 
+    // Bitta panel seansida faqat bir marta urinamiz — aks holda
+    // sessiya saqlanmasa cheksiz aylanma hosil bo'ladi.
+    try {
+      if (sessionStorage.getItem("uk_auth_tried")) {
+        tried.current = true;
+        setPhase("failed");
+        return;
+      }
+    } catch {
+      /* sessionStorage yopiq bo'lsa ham davom etaveramiz */
+    }
+
     let attempts = 0;
     const timer = setInterval(() => {
       attempts += 1;
@@ -62,6 +74,11 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
       if (wa && initData) {
         clearInterval(timer);
         tried.current = true;
+        try {
+          sessionStorage.setItem("uk_auth_tried", "1");
+        } catch {
+          /* muhim emas */
+        }
         setPhase("working");
         wa.ready?.();
         wa.expand?.();
@@ -74,8 +91,8 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
           .then((r) => r.json())
           .then((d) => {
             if (d?.ok) {
-              router.replace("/filiallar");
-              router.refresh();
+              // To'liq sahifa yuklanishi — cookie ishonchliroq qo'llanadi
+              window.location.href = "/filiallar?fresh=1";
             } else {
               setPhase("failed");
             }

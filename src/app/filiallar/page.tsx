@@ -8,11 +8,17 @@ import { votingOpen } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-export default async function BranchesPage() {
+export default async function BranchesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ fresh?: string }>;
+}) {
   if (!votingOpen()) redirect("/natijalar");
 
+  const { fresh } = await searchParams;
   const user = await getCurrentUser();
-  if (!user) redirect("/?e=session");
+  // fresh=1 bo'lsa-yu sessiya yo'q bo'lsa — cookie saqlanmagan
+  if (!user) redirect(fresh ? "/?e=cookie" : "/?e=session");
 
   const branches = await getBranches();
   const budget = await getVoteBudget(user.id);

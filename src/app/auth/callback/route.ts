@@ -31,7 +31,9 @@ export async function GET(req: Request) {
   const value = await buildSessionCookie(userId);
 
   // Cookie redirect javobining o'ziga yoziladi — shunda u albatta saqlanadi.
-  const res = NextResponse.redirect(new URL("/filiallar", url.origin));
+  // fresh=1 — kirish muvaffaqiyatli bo'ldi. Agar keyingi sahifa baribir
+  // sessiyani ko'rmasa, demak cookie saqlanmagan: shuni aniq ajratamiz.
+  const res = NextResponse.redirect(new URL("/filiallar?fresh=1", url.origin));
   res.cookies.set(SESSION_COOKIE_NAME, value, SESSION_COOKIE_OPTIONS);
   return res;
 }

@@ -45,7 +45,9 @@ export default async function Home({
   const errorText =
     e === "expired"
       ? "Havola muddati tugagan — u 10 daqiqa amal qiladi. Botga qaytib /ovoz yuboring, yangi havola beradi."
-      : e === "session"
+      : e === "cookie"
+        ? "Brauzeringiz sessiyani saqlamayapti. Panelni yopib, botdagi «🌐 Brauzerda ochish» tugmasi orqali kiring."
+        : e === "session"
         ? "Ovoz berish uchun avval botdan kiring: botga /ovoz yuboring va chiqqan tugmani bosing."
         : e === "notoken"
           ? "Havola to'liq emas. Botdagi tugmani bosib kiring."
