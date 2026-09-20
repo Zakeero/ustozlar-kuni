@@ -65,6 +65,7 @@ export interface VoteResult {
   ok: boolean;
   error?: VoteError;
   kind?: "main" | "bonus";
+  voteId?: number;
   budget?: VoteBudget;
 }
 
@@ -113,8 +114,9 @@ export async function castVote(input: {
     return { ok: false, error: "no_votes_left" };
   }
 
+  let voteId: number;
   try {
-    await insertVote({
+    voteId = await insertVote({
       userId: input.userId,
       teacherId: input.teacherId,
       nomination: input.nomination,
@@ -132,7 +134,7 @@ export async function castVote(input: {
     await markReferralCounted(input.userId);
   }
 
-  return { ok: true, kind, budget: await getVoteBudget(input.userId) };
+  return { ok: true, kind, voteId, budget: await getVoteBudget(input.userId) };
 }
 
 export const VOTE_ERROR_TEXT: Record<VoteError, string> = {

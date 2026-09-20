@@ -237,10 +237,12 @@ export async function insertVote(input: {
   kind: "main" | "bonus";
   comment: string | null;
   ipHash: string | null;
-}) {
-  await sql`
+}): Promise<number> {
+  const rows = (await sql`
     INSERT INTO votes (user_id, teacher_id, nomination, kind, comment, ip_hash)
     VALUES (${input.userId}, ${input.teacherId}, ${input.nomination},
             ${input.kind}, ${input.comment}, ${input.ipHash})
-  `;
+    RETURNING id
+  `) as { id: number }[];
+  return rows[0].id;
 }
