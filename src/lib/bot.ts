@@ -8,6 +8,7 @@ import {
 } from "./db";
 import { getVoteBudget } from "./votes";
 import {
+  APP_URL,
   BOT_TOKEN,
   createAuthToken,
   isSubscribed,
@@ -34,17 +35,41 @@ function subscribeKeyboard() {
     .text("✅ Obuna bo'ldim", "check_sub");
 }
 
-async function sendLoginLink(ctx: {
-  reply: (t: string, o?: object) => Promise<unknown>;
-}, userId: number) {
-  const token = await createAuthToken(userId);
-  const kb = new InlineKeyboard().url("🗳 Ovoz berish", loginUrl(token));
+const VOTE_BUTTON = "🗳 Ovoz berish";
+
+/** Chat pastida doim turadigan panel tugmasi */
+const panelKeyboard = new Keyboard().webApp(VOTE_BUTTON, APP_URL).resized();
+
+/**
+ * Ovoz berish panelini ochadi.
+ * Asosiy tugma — Telegram ichidagi panel (Mini App): u yerda kirish
+ * Telegramning imzolangan ma'lumoti orqali bo'ladi, cookie kerak emas.
+ * Ikkinchi tugma — brauzerda ochish, zaxira yo'l sifatida.
+ */
+async function sendPanel(
+  ctx: { reply: (t: string, o?: object) => Promise<unknown> },
+  userId: number,
+) {
+  const kb = new InlineKeyboard().webApp(VOTE_BUTTON, APP_URL);
+  try {
+    const token = await createAuthToken(userId);
+    kb.row().url("🌐 Brauzerda ochish", loginUrl(token));
+  } catch {
+    /* zaxira tugmasiz ham davom etaveradi */
+  }
+
   await ctx.reply(
     `Ajoyib! Endi ovoz berishingiz mumkin.\n\n` +
       `Sizda <b>${MAIN_VOTES} ta ovoz</b> bor — har birini boshqa ustozga berasiz.\n` +
       `Do'stingizni taklif qilsangiz, har biri uchun <b>+1 ovoz</b> qo'shiladi ` +
       `(ko'pi bilan ${MAX_BONUS_VOTES} ta).`,
     { parse_mode: "HTML", reply_markup: kb },
+  );
+
+  await ctx.reply(
+    `Panel doim shu yerda — pastdagi <b>${VOTE_BUTTON}</b> tugmasi orqali ` +
+      `istalgan vaqtda qaytasiz.`,
+    { parse_mode: "HTML", reply_markup: panelKeyboard },
   );
 }
 
@@ -76,7 +101,7 @@ async function advance(ctx: any, telegramId: number) {
     }
   }
 
-  await sendLoginLink(ctx, user.id);
+  await sendPanel(ctx, user.id);
 }
 
 /* ---------- /start ---------- */
