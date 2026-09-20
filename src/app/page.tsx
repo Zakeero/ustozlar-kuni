@@ -75,7 +75,7 @@ export default async function Home({
 
   return (
     <main>
-      <TelegramAutoLogin loggedIn={Boolean(user)} />
+      <TelegramAutoLogin loggedIn={Boolean(user)} errorCode={e} />
 
       {errorText && (
         <div className="mt-5 rounded-2xl border border-[color:var(--brand-300)] bg-[color:var(--sand)] px-4 py-3 text-sm font-medium text-[color:var(--brand-700)]">

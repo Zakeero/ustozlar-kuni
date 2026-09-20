@@ -45,25 +45,21 @@ function insideTelegram(): boolean {
  * Panel Telegram ichida ochilganda foydalanuvchini avtomatik tanib oladi.
  * Asosiy yo'l — botdagi tugmaga kiritilgan kirish kaliti; bu esa zaxira.
  */
-export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
+export default function TelegramAutoLogin({
+  loggedIn,
+  errorCode,
+}: {
+  loggedIn: boolean;
+  errorCode?: string;
+}) {
   const router = useRouter();
   const tried = useRef(false);
   const [phase, setPhase] = useState<Phase>("idle");
 
   useEffect(() => {
-    if (loggedIn || tried.current) return;
-
-    // Bitta panel seansida faqat bir marta urinamiz — aks holda
-    // sessiya saqlanmasa cheksiz aylanma hosil bo'ladi.
-    try {
-      if (sessionStorage.getItem("uk_auth_tried")) {
-        tried.current = true;
-        setPhase("failed");
-        return;
-      }
-    } catch {
-      /* sessionStorage yopiq bo'lsa ham davom etaveramiz */
-    }
+    // e=cookie — kirish o'tgan, lekin sessiya saqlanmagan.
+    // Qayta urinish aylanma hosil qiladi, shuning uchun to'xtaymiz.
+    if (loggedIn || tried.current || errorCode === "cookie") return;
 
     let attempts = 0;
     const timer = setInterval(() => {
@@ -74,11 +70,6 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
       if (wa && initData) {
         clearInterval(timer);
         tried.current = true;
-        try {
-          sessionStorage.setItem("uk_auth_tried", "1");
-        } catch {
-          /* muhim emas */
-        }
         setPhase("working");
         wa.ready?.();
         wa.expand?.();
@@ -113,7 +104,7 @@ export default function TelegramAutoLogin({ loggedIn }: { loggedIn: boolean }) {
     }, 200);
 
     return () => clearInterval(timer);
-  }, [loggedIn, router]);
+  }, [loggedIn, errorCode, router]);
 
   if (phase === "idle") return null;
 

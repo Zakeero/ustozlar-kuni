@@ -48,6 +48,16 @@ export async function createSession(userId: number) {
   (await cookies()).set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS);
 }
 
+/** Manzil orqali kelgan sessiya kalitini tekshirish */
+export async function readSessionValue(value: string): Promise<number | null> {
+  try {
+    const { payload } = await jwtVerify(value, secret());
+    return typeof payload.uid === "number" ? payload.uid : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getSessionUserId(): Promise<number | null> {
   const c = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!c) return null;

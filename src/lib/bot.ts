@@ -7,14 +7,8 @@ import {
   upsertUser,
 } from "./db";
 import { getVoteBudget } from "./votes";
-import {
-  APP_URL,
-  BOT_TOKEN,
-  createAuthToken,
-  isSubscribed,
-  loginUrl,
-  referralLink,
-} from "./telegram";
+import { APP_URL, BOT_TOKEN, isSubscribed, referralLink } from "./telegram";
+import { buildSessionCookie } from "./session";
 import { SITE, MAIN_VOTES, MAX_BONUS_VOTES } from "./config";
 
 // Build vaqtida token bo'lmasligi mumkin — o'rinbosar qiymat bilan quriladi,
@@ -37,8 +31,10 @@ function subscribeKeyboard() {
 
 const VOTE_BUTTON = "🗳 Ovoz berish";
 
-/** Chat pastida doim turadigan panel tugmasi */
-const panelKeyboard = new Keyboard().webApp(VOTE_BUTTON, APP_URL).resized();
+/** Sessiya kaliti bilan panel manzili — qayta-qayta ishlaydi */
+function panelUrl(sessionValue: string): string {
+  return `${APP_URL}/kirish?s=${encodeURIComponent(sessionValue)}`;
+}
 
 /**
  * Ovoz berish panelini ochadi.
@@ -50,17 +46,17 @@ async function sendPanel(
   ctx: { reply: (t: string, o?: object) => Promise<unknown> },
   userId: number,
 ) {
-  // Panel tugmasi kirish kalitini o'zi bilan olib boradi — shunda panel
-  // ochilishi bilan foydalanuvchi tanilgan bo'ladi, hech narsa kutilmaydi.
-  let kb: InlineKeyboard;
-  try {
-    const panelToken = await createAuthToken(userId);
-    kb = new InlineKeyboard().webApp(VOTE_BUTTON, loginUrl(panelToken));
-    const browserToken = await createAuthToken(userId);
-    kb.row().url("🌐 Brauzerda ochish", loginUrl(browserToken));
-  } catch {
-    kb = new InlineKeyboard().webApp(VOTE_BUTTON, APP_URL);
-  }
+  // Tugma sessiya kalitini o'zi bilan olib boradi — panel ochilishi bilan
+  // foydalanuvchi tanilgan bo'ladi va tugma qayta bosilsa ham ishlayveradi.
+  const s = await buildSessionCookie(userId);
+  const link = panelUrl(s);
+
+  const kb = new InlineKeyboard()
+    .webApp(VOTE_BUTTON, link)
+    .row()
+    .url("🌐 Brauzerda ochish", link);
+
+  const panelKeyboard = new Keyboard().webApp(VOTE_BUTTON, link).resized();
 
   await ctx.reply(
     `Ajoyib! Endi ovoz berishingiz mumkin.\n\n` +
