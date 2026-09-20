@@ -12,7 +12,7 @@ export default async function BranchesPage() {
   if (!votingOpen()) redirect("/natijalar");
 
   const user = await getCurrentUser();
-  if (!user) redirect("/?e=notoken");
+  if (!user) redirect("/?e=session");
 
   const branches = await getBranches();
   const budget = await getVoteBudget(user.id);

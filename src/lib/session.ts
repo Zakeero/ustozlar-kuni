@@ -24,15 +24,28 @@ async function sign(payload: Record<string, unknown>): Promise<string> {
 
 /* ---------- Foydalanuvchi sessiyasi ---------- */
 
+export const SESSION_COOKIE_NAME = SESSION_COOKIE;
+
+export const SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: MAX_AGE,
+};
+
+/**
+ * Sessiya qiymatini qaytaradi.
+ * Redirect javobida cookie'ni to'g'ridan-to'g'ri javobga yozish uchun kerak —
+ * cookies() orqali yozilgan qiymat redirect bilan birga yo'qolishi mumkin.
+ */
+export async function buildSessionCookie(userId: number): Promise<string> {
+  return sign({ uid: userId });
+}
+
 export async function createSession(userId: number) {
-  const token = await sign({ uid: userId });
-  (await cookies()).set(SESSION_COOKIE, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: MAX_AGE,
-  });
+  const token = await buildSessionCookie(userId);
+  (await cookies()).set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS);
 }
 
 export async function getSessionUserId(): Promise<number | null> {

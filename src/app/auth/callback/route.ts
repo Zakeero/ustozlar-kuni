@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { consumeAuthToken } from "@/lib/telegram";
-import { createSession } from "@/lib/session";
+import {
+  buildSessionCookie,
+  SESSION_COOKIE_NAME,
+  SESSION_COOKIE_OPTIONS,
+} from "@/lib/session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,11 +16,22 @@ export async function GET(req: Request) {
     return NextResponse.redirect(new URL("/?e=notoken", url.origin));
   }
 
-  const userId = await consumeAuthToken(token);
+  let userId: number | null = null;
+  try {
+    userId = await consumeAuthToken(token);
+  } catch (e) {
+    console.error("auth callback db error", e);
+    return NextResponse.redirect(new URL("/?e=server", url.origin));
+  }
+
   if (!userId) {
     return NextResponse.redirect(new URL("/?e=expired", url.origin));
   }
 
-  await createSession(userId);
-  return NextResponse.redirect(new URL("/filiallar", url.origin));
+  const value = await buildSessionCookie(userId);
+
+  // Cookie redirect javobining o'ziga yoziladi — shunda u albatta saqlanadi.
+  const res = NextResponse.redirect(new URL("/filiallar", url.origin));
+  res.cookies.set(SESSION_COOKIE_NAME, value, SESSION_COOKIE_OPTIONS);
+  return res;
 }

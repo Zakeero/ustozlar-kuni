@@ -18,7 +18,7 @@ export default async function BranchPage({
 
   const { slug } = await params;
   const user = await getCurrentUser();
-  if (!user) redirect("/?e=notoken");
+  if (!user) redirect("/?e=session");
 
   const branch = await getBranchBySlug(slug);
   if (!branch) notFound();

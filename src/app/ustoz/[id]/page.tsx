@@ -20,7 +20,7 @@ export default async function TeacherPage({
   if (!Number.isFinite(teacherId)) notFound();
 
   const user = await getCurrentUser();
-  if (!user) redirect("/?e=notoken");
+  if (!user) redirect("/?e=session");
 
   const teacher = await getTeacher(teacherId);
   if (!teacher || !teacher.is_active) notFound();

@@ -11,6 +11,7 @@ import {
 import { getCurrentUser } from "@/lib/session";
 import { sql } from "@/lib/db";
 import TeacherMarquee from "@/components/TeacherMarquee";
+import TelegramAutoLogin from "@/components/TelegramAutoLogin";
 
 export const dynamic = "force-dynamic";
 
@@ -43,10 +44,14 @@ export default async function Home({
 
   const errorText =
     e === "expired"
-      ? "Havola muddati tugagan. Botga qaytib /ovoz buyrug'ini yuboring."
-      : e === "notoken"
-        ? "Havola noto'g'ri. Botdagi tugma orqali kiring."
-        : null;
+      ? "Havola muddati tugagan — u 10 daqiqa amal qiladi. Botga qaytib /ovoz yuboring, yangi havola beradi."
+      : e === "session"
+        ? "Ovoz berish uchun avval botdan kiring: botga /ovoz yuboring va chiqqan tugmani bosing."
+        : e === "notoken"
+          ? "Havola to'liq emas. Botdagi tugmani bosib kiring."
+          : e === "server"
+            ? "Vaqtincha nosozlik. Bir daqiqadan so'ng qayta urinib ko'ring."
+            : null;
 
   const steps = [
     {
@@ -68,6 +73,8 @@ export default async function Home({
 
   return (
     <main>
+      <TelegramAutoLogin loggedIn={Boolean(user)} />
+
       {errorText && (
         <div className="mt-5 rounded-2xl border border-[color:var(--brand-300)] bg-[color:var(--sand)] px-4 py-3 text-sm font-medium text-[color:var(--brand-700)]">
           {errorText}

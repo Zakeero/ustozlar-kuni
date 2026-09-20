@@ -35,6 +35,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
+        {/* Telegram Mini App — sayt Telegram ichida ochilganda ishlaydi */}
+        <script src="https://telegram.org/js/telegram-web-app.js" async />
       </head>
       <body className="font-sans antialiased">
         <SiteHeader />

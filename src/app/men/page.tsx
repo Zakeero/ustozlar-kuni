@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MePage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/?e=notoken");
+  if (!user) redirect("/?e=session");
 
   const [budget, votes] = await Promise.all([
     getVoteBudget(user.id),
